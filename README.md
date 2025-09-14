@@ -80,25 +80,7 @@ cd 24hours
 npm install
 ```
 
-### **3. Google Maps API 키 설정**
-1. [Google Cloud Console](https://console.cloud.google.com/)에서 API 키 발급
-2. `app.json` 파일에서 `YOUR_GOOGLE_MAPS_API_KEY` 교체
-
-```json
-{
-  "expo": {
-    "android": {
-      "config": {
-        "googleMaps": {
-          "apiKey": "여기에_실제_API_키_입력"
-        }
-      }
-    }
-  }
-}
-```
-
-### **4. 앱 실행**
+### **3. 앱 실행**
 
 #### **개발 서버 시작**
 ```bash

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "TwentyFourHourMapApp",
-    "slug": "TwentyFourHourMapApp",
+    "name": "24시간이 모자라",
+    "slug": "twenty-four-hour-mozara",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -10,15 +10,31 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#EBF3FF"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "icon": "./assets/icon.png",
+      "bundleIdentifier": "com.twentyfourhourmozara.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "이 앱은 24시간 업체를 찾기 위해 위치 정보가 필요합니다."
+      }
     },
     "android": {
+      "icon": "./assets/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#EBF3FF"
+      },
+      "package": "com.twentyfourhourmozara.app",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "YOUR_GOOGLE_MAPS_API_KEY"
+        }
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false

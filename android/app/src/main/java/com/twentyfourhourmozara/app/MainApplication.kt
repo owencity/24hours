@@ -15,6 +15,8 @@ import com.facebook.react.defaults.DefaultReactNativeHost
 
 import expo.modules.ApplicationLifecycleDispatcher
 import expo.modules.ReactNativeHostWrapper
+import com.naver.maps.map.NaverMapSdk
+import com.naver.maps.map.NaverMapSdk.NcpKeyClient
 
 class MainApplication : Application(), ReactApplication {
 
@@ -47,6 +49,22 @@ class MainApplication : Application(), ReactApplication {
     }
     loadReactNative(this)
     ApplicationLifecycleDispatcher.onApplicationCreate(this)
+
+    // 네이버 지도 SDK 인증키 강제 지정 및 인증 실패 로그 추가
+    try {
+      // 발급받은 키 유형이 X-NCP-APIGW-API-KEY-ID 인 경우
+      NaverMapSdk.getInstance(this).client = NcpKeyClient("smwjjm1zhl")
+      NaverMapSdk.getInstance(this).onAuthFailedListener =
+        NaverMapSdk.OnAuthFailedListener { exception ->
+          android.util.Log.e(
+            "NaverMapSdk",
+            "Authorization failed: ${exception?.message}",
+            exception
+          )
+        }
+    } catch (e: Throwable) {
+      android.util.Log.e("NaverMapSdk", "Initialization error", e)
+    }
   }
 
   override fun onConfigurationChanged(newConfig: Configuration) {

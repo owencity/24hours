@@ -11,11 +11,18 @@ import {
   ScrollView,
   Linking,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import Ionicons from 'react-native-vector-icons/Ionicons'; // type: any
+import { NaverMapView, NaverMapMarkerOverlay } from '@mj-studio/react-native-naver-map';
 import * as Location from 'expo-location';
 
 const { width, height } = Dimensions.get('window');
+
+// 기본 카메라(강남역)
+const DEFAULT_CAMERA = {
+  latitude: 37.4979,
+  longitude: 127.0276,
+  zoom: 15,
+};
 
 interface MapScreenProps {
   navigation: any;
@@ -125,7 +132,7 @@ export default function MapScreen({ navigation, route }: MapScreenProps) {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="dark" />
+      <StatusBar barStyle="dark-content" />
       
       {/* 헤더 */}
       <View style={styles.header}>
@@ -153,52 +160,38 @@ export default function MapScreen({ navigation, route }: MapScreenProps) {
 
       {/* 지도 영역 */}
       <View style={styles.mapContainer}>
-        {location ? (
-          <MapView
-            provider={PROVIDER_GOOGLE}
-            style={styles.map}
-            initialRegion={{
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-              latitudeDelta: 0.01,
-              longitudeDelta: 0.01,
-            }}
-            showsUserLocation={true}
-            showsMyLocationButton={true}
-          >
-            {/* 사용자 위치 마커 */}
-            <Marker
-              coordinate={{
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-              }}
-              title="내 위치"
-              pinColor="blue"
+        <NaverMapView
+          style={styles.map}
+          initialCamera={DEFAULT_CAMERA}
+          camera={location ? {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            zoom: 15,
+          } : undefined}
+          animationDuration={location ? 500 : 0}
+          isShowLocationButton={true}
+          isShowZoomControls={true}
+        >
+          {/* 사용자 위치 마커 (있을 때만) */}
+          {location && (
+            <NaverMapMarkerOverlay
+              latitude={location.coords.latitude}
+              longitude={location.coords.longitude}
+              caption={{ text: '내 위치' }}
             />
-            
-            {/* 업체 마커들 */}
-            {results.map((item) => (
-              <Marker
-                key={item.id}
-                coordinate={{
-                  latitude: item.latitude,
-                  longitude: item.longitude,
-                }}
-                title={item.title}
-                description={item.subtitle}
-                pinColor={item.type === 'charging' ? 'yellow' : item.type === 'cafe' ? 'brown' : item.type === 'hospital' ? 'red' : 'purple'}
-              />
-            ))}
-          </MapView>
-        ) : (
-          <View style={styles.mapPlaceholder}>
-            <Ionicons name="location" size={64} color="#9CA3AF" />
-            <Text style={styles.mapPlaceholderText}>위치를 가져오는 중...</Text>
-            <Text style={styles.mapPlaceholderSubtext}>
-              {errorMsg || '잠시만 기다려주세요'}
-            </Text>
-          </View>
-        )}
+          )}
+
+          {/* 업체 마커들 */}
+          {results.map((item) => (
+            <NaverMapMarkerOverlay
+              key={item.id}
+              latitude={item.latitude}
+              longitude={item.longitude}
+              caption={{ text: item.title }}
+              subCaption={{ text: item.subtitle }}
+            />
+          ))}
+        </NaverMapView>
       </View>
 
       {/* 하단 정보 패널 */}
